@@ -18,7 +18,7 @@ class ServerHandle {
     /**
      * @param {Settings} settings
      */
-    constructor(settings) {
+    constructor(settings, server = undefined) {
         /** @type {Settings} */
         this.settings = Settings;
 
@@ -42,12 +42,12 @@ class ServerHandle {
         this.stopwatch = new Stopwatch();
         this.logger = new Logger();
 
-        this.listener = new Listener(this);
+        this.listener = new Listener(this, server);
         this.matchmaker = new Matchmaker(this);
         /** @type {Identified<World>} */
-        this.worlds = { };
+        this.worlds = {};
         /** @type {Identified<Player>} */
-        this.players = { };
+        this.players = {};
 
         this.setSettings(settings);
     }
@@ -58,7 +58,7 @@ class ServerHandle {
      * @param {Settings} settings
      */
     setSettings(settings) {
-        this.settings = Object.assign({ }, Settings, settings);
+        this.settings = Object.assign({}, Settings, settings);
         this.tickDelay = 1000 / this.settings.serverFrequency;
         this.ticker.step = this.tickDelay;
         this.stepMult = this.tickDelay / 40;
@@ -109,7 +109,7 @@ class ServerHandle {
     /** @returns {World} */
     createWorld() {
         let id = 0;
-        while (this.worlds.hasOwnProperty(++id)) ;
+        while (this.worlds.hasOwnProperty(++id));
         const newWorld = new World(this, id);
         this.worlds[id] = newWorld;
         this.gamemode.onNewWorld(newWorld);
@@ -137,7 +137,7 @@ class ServerHandle {
      */
     createPlayer(router) {
         let id = 0;
-        while (this.players.hasOwnProperty(++id)) ;
+        while (this.players.hasOwnProperty(++id));
         const newPlayer = new Player(this, id, router);
         this.players[id] = newPlayer;
         router.player = newPlayer;

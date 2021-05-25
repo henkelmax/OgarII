@@ -9,10 +9,11 @@ class Listener {
     /**
      * @param {ServerHandle} handle
      */
-    constructor(handle) {
+    constructor(handle, server) {
         /** @type {WebSocketServer} */
         this.listenerSocket = null;
         this.handle = handle;
+        this.server = server;
         this.globalChat = new ChatChannel(this);
 
         /** @type {Router[]} */
@@ -20,7 +21,7 @@ class Listener {
         /** @type {Connection[]} */
         this.connections = [];
         /** @type {Counter<IPAddress>} */
-        this.connectionsByIP = { };
+        this.connectionsByIP = {};
     }
 
     get settings() { return this.handle.settings; }
@@ -30,7 +31,8 @@ class Listener {
         if (this.listenerSocket !== null) return false;
         this.logger.debug(`listener opening at ${this.settings.listeningPort}`);
         this.listenerSocket = new WebSocketServer({
-            port: this.settings.listeningPort,
+            server: this.server,
+            path: "/websocket",
             verifyClient: this.verifyClient.bind(this)
         }, this.onOpen.bind(this));
         this.listenerSocket.on("connection", this.onConnection.bind(this));

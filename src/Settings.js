@@ -6,7 +6,6 @@ const value = Object.seal({
     listenerMaxConnections: 100,
     listenerMaxClientDormancy: 1000 * 60,
     listenerMaxConnectionsPerIP: -1,
-    listeningPort: Number.parseInt(process.env.SERVER_PORT) || 444,
 
     serverFrequency: Number.parseInt(process.env.SERVER_FREQUENCY) || 25,
     serverName: process.env.SERVER_NAME || "An unnamed server",
